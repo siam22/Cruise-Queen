@@ -113,11 +113,11 @@
                     </div>
                 </div>
             </div>
-            <button class="btn-style">Book Now</button>
+            <button onclick="AlertFunction()" class="btn-style">Book Now</button>
         </div>
         
         <script>
-            
+            // Increase or decrease the ticket amount and calculates the sum.
             function HandleTicketChange(product, Increase){
                 const TicketInput = document.getElementById(product + "-input");
                  const TicketCount = getInputValue(product);
@@ -140,6 +140,7 @@
 
                 CalculateTotal();
             }
+            // Calculates the final total of the tickets including VAT.
             function CalculateTotal(){
                 const FirstClassCount = getInputValue('FirstClass');
                 const EconomyCount = getInputValue('EconomyClass');
@@ -152,25 +153,20 @@
                 document.getElementById('Final-Total').innerText = Total;
 
             }
+            // Function to convert the input to integer.
             function getInputValue (product){
                 const TicketInput = document.getElementById(product + '-input');
                 const TicketCount = parseInt(TicketInput.value);
                 return TicketCount;
             }
-            // function TicketChange(Increase){
-            //     const FirstTicket = document.getElementById("EconomyClass-input");
-            //      const InputTicket = parseInt(FirstTicket.value);
-            //     let FirstClassCount = InputTicket;
-            //     if(Increase == true){
-            //          FirstClassCount = InputTicket + 1;
-            //     }
-            //     if(Increase == false && InputTicket > 0){
-            //          FirstClassCount = InputTicket - 1;
-            //     }
-            //     FirstTicket.value = FirstClassCount;
-            //     const FinalFirstClass = FirstClassCount * 100;
-            //     document.getElementById('TotalValue').innerText = "$" + FinalFirstClass;
-            // }
+            // Function for showing an alert message.
+            function AlertFunction(amount) {
+                if (document.getElementById('Final-Total').innerText > 0){
+                    let confirm = alert("Do you want to book tickets?");
+                const Amount = document.getElementById('Final-Total').innerText;
+                prompt("Congratulations! Your tickets has been booked", "$" + Amount);
+                }
+            }
         </script>
     </main>
 
