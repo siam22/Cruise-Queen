@@ -50,11 +50,11 @@
             <div class="inputs">
                 <div class="input-group">
                     <label" for="">Departure</label>
-                    <input class="inp-style" type="date" name="">
+                    <input class="inp-style date-section" type="date" name="">
                 </div>
                 <div class="input-group">
                     <label for="">Return</label>
-                    <input class="inp-style" type="date" name="">
+                    <input class="inp-style date-section" type="date" name="">
                 </div>
             </div>
             <div class="input-group f-class">
@@ -62,12 +62,14 @@
                     <label for="">First Class ($150)</label>
                 </div>
                 <div class="col-md-12 center-item">
-                    <button id="TryOut" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                    <button onclick="HandleTicketChange('FirstClass', false)" class="btn btn-default"><i class="fas fa-minus"></i></button>
                     <input id="FirstClass-input" class="inp-style inp-width" type="number" name="" value="0">
-                    <button id="NewAttempt" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                    <button onclick="HandleTicketChange('FirstClass', true)" class="btn btn-default"><i class="fas fa-plus"></i></button>
                     
                 </div>
-                
+                <div>
+                    <p id="FirstClass-total">$ 00</p>
+                </div>
             </div>
             
             <div class="input-group f-class">
@@ -75,9 +77,12 @@
                     <label for="">Economy ($100)</label>
                 </div>
                 <div class="col-md-12 center-item">
-                    <button class="btn btn-default"><i class="fas fa-minus"></i></button>
-                    <input class="inp-style inp-width" type="number" name="" value="0">
-                    <button class="btn btn-default"><i class="fas fa-plus"></i></button>
+                    <button onclick="HandleTicketChange ('EconomyClass', false)" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                    <input id="EconomyClass-input" class="inp-style inp-width" type="number" name="" value="0">
+                    <button onclick="HandleTicketChange('EconomyClass', true)" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                </div>
+                <div>
+                    <p id="EconomyClass-total">$ 00</p>
                 </div>
             </div>
             <div class="calculations">
@@ -86,7 +91,7 @@
                         <p>Subtotal</p>
                     </div>
                     <div class="right">
-                        <p id="TotalValue">$500</p>
+                        <p id="TotalValue">$00</p>
                     </div>
                 </div>
 
@@ -95,7 +100,7 @@
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right">
-                        <p>$50</p>
+                        <p id="Total-VAT">$00</p>
                     </div>
                 </div>
                 <hr>
@@ -104,50 +109,68 @@
                         <h4>Total</h4>
                     </div>
                     <div class="right">
-                        <p>$550</p>
+                        <p id="Final-Total">$00</p>
                     </div>
                 </div>
             </div>
             <button class="btn-style">Book Now</button>
         </div>
+        
         <script>
-            const FirstBtn = document.getElementById("NewAttempt");
-            FirstBtn.addEventListener("click", function(){
-                 HandleTicketChange(true);
-            })
-                const SecondBtn = document.getElementById("NewAttempt");
-                SecondBtn.addEventListener("click", function(){
-                 HandleTicketChange(false);
-            });
-            function HandleTicketChange(Increase){
-                const FirstTicket = document.getElementById("FirstClass-input");
-                 const InputTicket = parseInt(FirstTicket.value);
-                // const FirstClassCount = InputTicket + 1;
-                let FirstClassCount = InputTicket;
-
-                FirstTicket.value = FirstClassCount;
-                const FinalFirstClass = FirstClassCount * 150;
-                document.getElementById('TotalValue').innerText = "$" + FinalFirstClass;
-            }
             
-            // const FirstBtn = document.getElementById("NewAttempt");
-            // FirstBtn.addEventListener("click", function(){
-            //      const FirstTicket = document.getElementById("FirstClass-input");
+            function HandleTicketChange(product, Increase){
+                const TicketInput = document.getElementById(product + "-input");
+                 const TicketCount = getInputValue(product);
+                let NewTicketCount = TicketCount;
+                if(Increase == true){
+                     NewTicketCount = TicketCount + 1;
+                }
+                if(Increase == false && TicketCount > 0){
+                     NewTicketCount = TicketCount - 1;
+                }
+                TicketInput.value = NewTicketCount;
+                let FinalTicketCost = 0;
+                if(product == 'FirstClass'){
+                    FinalTicketCost = NewTicketCount * 150;
+                }
+                if(product == 'EconomyClass'){
+                     FinalTicketCost = NewTicketCount * 100;
+                }
+                document.getElementById(product + '-total').innerText = "$" + FinalTicketCost;
+
+                CalculateTotal();
+            }
+            function CalculateTotal(){
+                const FirstClassCount = getInputValue('FirstClass');
+                const EconomyCount = getInputValue('EconomyClass');
+
+                const FinalTotal = FirstClassCount * 150 + EconomyCount * 100;
+                document.getElementById('TotalValue').innerText = FinalTotal;
+                const VAT = Math.round(FinalTotal * 0.1);
+                document.getElementById('Total-VAT').innerText = VAT;
+                const Total = FinalTotal + VAT;
+                document.getElementById('Final-Total').innerText = Total;
+
+            }
+            function getInputValue (product){
+                const TicketInput = document.getElementById(product + '-input');
+                const TicketCount = parseInt(TicketInput.value);
+                return TicketCount;
+            }
+            // function TicketChange(Increase){
+            //     const FirstTicket = document.getElementById("EconomyClass-input");
             //      const InputTicket = parseInt(FirstTicket.value);
-            //     const FirstClassCount = InputTicket + 1;
+            //     let FirstClassCount = InputTicket;
+            //     if(Increase == true){
+            //          FirstClassCount = InputTicket + 1;
+            //     }
+            //     if(Increase == false && InputTicket > 0){
+            //          FirstClassCount = InputTicket - 1;
+            //     }
             //     FirstTicket.value = FirstClassCount;
-            //     const FinalFirstClass = FirstClassCount * 150;
+            //     const FinalFirstClass = FirstClassCount * 100;
             //     document.getElementById('TotalValue').innerText = "$" + FinalFirstClass;
-            // });
-            // const SecondBtn = document.getElementById('TryOut');
-            // SecondBtn.addEventListener("click", function(){
-            //     const FirstDecrease = document.getElementById("FirstClass-input");
-            //     const InputDecrease = parseInt(FirstDecrease.value);
-            //     const FirstDecreaseCount = InputDecrease - 1;
-            //     FirstDecrease.value = FirstDecreaseCount;
-            //     const FinalFirstDecrease = FirstDecreaseCount * 150;
-            //     document.getElementById('TotalValue').innerText = "$" + FinalFirstDecrease;
-            // })
+            // }
         </script>
     </main>
 
